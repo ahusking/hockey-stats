@@ -1,0 +1,8 @@
+<?php
+$clubname = 'United Hockey Club';
+$sqlserver = 'localhost';
+$sqlusername = 'username';
+$sqlpassword = 'password';
+$sqldatabse = 'Hockey' . date("Y");
+
+?>

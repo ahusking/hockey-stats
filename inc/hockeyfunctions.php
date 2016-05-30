@@ -16,6 +16,7 @@ function DownloadCompetitionStats($json) {
 }
 
 function ConvertCompetitionXLSToSql ($filename, $competitionID) {
+	
 	$compArray = ExecuteSQL("Select CompetitionName From Competitions Where CompetitionID = '$competitionID';");
 
 	if (!file_exists("$filename")) {
@@ -83,6 +84,7 @@ function EnumerateCompetitions($html) {
 function GetCompetition ($compID, $compName) {
 	global $ClubOnly;
 	global $compJSON;
+	global $clubname;
 	$tableResponse = "";
 	$html = file_get_html("https://sportsdesq.onesporttechnology.com/15/portal/fixtures/competitionid/$compID");
 	//print $html;
@@ -91,6 +93,7 @@ function GetCompetition ($compID, $compName) {
 	$teams = array();
 	$scores = array();
 	$dates = array();
+	$venues = array();
 	foreach ($html-> find('div.row') as $row) {
 		$count++;
 		$round[$count] = array();
@@ -103,6 +106,9 @@ function GetCompetition ($compID, $compName) {
 		foreach ($row-> find('div.venue .datetime-block') as $date) {
 			array_push ($dates,trim(str_replace('</p>',"",str_replace('<p class="heading">',"",str_replace('Date/Time:',"",trim(str_replace("</div>","",explode("<p>",$date)[1])))))));
 		}
+		foreach ($row-> find('div.venue .venue-block') as $venue) {
+			array_push ($venues,trim(str_replace('</p>',"",str_replace('<p class="heading">',"",str_replace('Venue',"",trim(str_replace("</div>","",explode("<p>",$venue)[1])))))));
+		}
 	}
 // 	var_dump($dates);
 	if ($ClubOnly == 0) {
@@ -114,10 +120,11 @@ function GetCompetition ($compID, $compName) {
 	}
 	$compJSON[$compName] = "";
 	for ($x = 0; $x <= ((count($teams))/2); $x++) {
-		if (($teams[$x*2] == "United Hockey Club") or ($teams[$x*2+1] == "United Hockey Club")) {
+		if (($teams[$x*2] == $clubname) or ($teams[$x*2+1] == $clubname)) {
 			$compJSON[$compName][$teams[$x*2]] = $scores[$x*2];
 			$compJSON[$compName][$teams[$x*2+1]] = $scores[$x*2+1];
 			$compJSON[$compName]["Date"] = $dates[$x];
+			$compJSON[$compName]["Venue"] = $venues[$x];
 			if ($ClubOnly && $teams[$x*2] == "United Hockey Club") {
 				$tableResponse =  "$tableResponse<tr bgcolor='#00ffff'><td class='col-md-2'><b> United " . $compName . "</b><br>" . $scores[$x*2] . "</td><td class='col-md-2'><b>" . $teams[$x*2+1] . " " . $compName .  "</b><br>" . $scores[$x*2+1] . "</td><td> " .  $dates[$x] . "</td></tr>";
 			} elseif ($ClubOnly && $teams[$x*2+1] == "United Hockey Club") {

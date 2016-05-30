@@ -87,7 +87,7 @@
           <h1 class="page-header">United Dashboard</h1>
 <?php 
 error_reporting(E_ALL);
-include("hockeyfunctions.php");
+include("inc/hockeyfunctions.php");
 $page = strtolower($_REQUEST["page"]);
 // $page = "topscorers";
 

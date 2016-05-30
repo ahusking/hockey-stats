@@ -9,9 +9,9 @@ CycleCompetitions(json_decode(GetCompetitionList(),1)["competitions"]);
 
 
 function GetCompetitionList (){
-// 	$html = file_get_html("https://sportsdesq.onesporttechnology.com/index.cfm?action=ajax.getCompetitions&orgId=15&keyword=&searchColumn=&currentpage=1&rowsperpage=100&_=1462844773562");
-// United Competitions
-	$html = file_get_html("https://sportsdesq.onesporttechnology.com/index.cfm?action=ajax.getCompetitions&orgId=15&keyword=&searchColumn=&currentpage=1&rowsperpage=100&clubId=278&_=1462844773562");
+	$html = file_get_html("https://sportsdesq.onesporttechnology.com/index.cfm?action=ajax.getCompetitions&orgId=15&keyword=&searchColumn=&currentpage=1&rowsperpage=100&clubId=&_=1462844773562");
+	// United Competitions
+	// $html = file_get_html("https://sportsdesq.onesporttechnology.com/index.cfm?action=ajax.getCompetitions&orgId=15&keyword=&searchColumn=&currentpage=1&rowsperpage=100&clubId=278&_=1462844773562");
 	return (str_replace(" " , "", $html));
 }
 

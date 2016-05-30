@@ -18,7 +18,7 @@
     <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="dashboard.css" rel="stylesheet">
+    <link href="css/dashboard.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -80,7 +80,7 @@
             <li class="disabled"><a href="">Random Item 1</a></li>
             <li class="disabled"><a href="">Random Item 2</a></li>
             <li class="disabled"><a href="">Random Item 3</a></li>
-            <li ><a href="generateclubxls.php">This Weeks Results</a></li>
+            <li ><a href="inc/generateclubxls.php">This Weeks Results</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

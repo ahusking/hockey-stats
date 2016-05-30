@@ -1,6 +1,6 @@
 <?php
-require_once '../../../Classes/PHPExcel/IOFactory.php';
-require_once '../../../Classes/PHPExcel.php';
+require_once '/var/www/Classes/PHPExcel/IOFactory.php';
+require_once '/var/www/Classes/PHPExcel.php';
 include("simple_html_dom.php");
 include("config.php");
 $compJSON = "";
@@ -50,10 +50,10 @@ function ConvertCompetitionXLSToSqlV2 ($filename, $competitionID) {
 	foreach ($sheetData as $row => $data) {
 		if ($data["A"] != "Last Name" && $data["B"] != "Firstname") {
 			print "\t\t" . $data["B"] . " " . $data["A"] . " - " . $compCode["CompetitionCode"] . "\r\n";
-			print $compCode["CompetitionCode"] . "\r\n";
+// 			print $compCode["CompetitionCode"] . "\r\n";
 			//print 'REPLACE INTO ' . $compArray['CompetitionName'] . ' (`PlayerName`, `GamesPlayed`, `Goals`, `GCard`, `YCard`, `RCard`) VALUES ("' . ucwords($data['B'] . ' ' . $data['A']) . '","' . $data['D'] . '","' . $data['E'] . '","' . $data['H'] . '","' . $data['G'] . '","' . $data['F'] . '");\r\n\r\n';
 			ExecuteSQL ('UPDATE PlayerStats SET ' . $compCode["CompetitionCode"] . 'Goals = "' . $data['E'] . '" Where PlayerName = "' . $data["B"] . " " . $data["A"] . '"');
-			ExecuteSQL('REPLACE INTO ' . $compArray['CompetitionName'] . ' (`PlayerName`, `GamesPlayed`, `Team`, `Goals`, `GCard`, `YCard`, `RCard`) VALUES ("' . ucwords($data['B'] . ' ' . $data['A']). '","' . $data['D'] . '","' . $data['C'] . '","' . $data['E'] . '","' . $data['H'] . '","' . $data['G'] . '","' . $data['F'] . '");'  );
+			ExecuteSQL ('REPLACE INTO ' . $compArray['CompetitionName'] . ' (`PlayerName`, `GamesPlayed`, `Team`, `Goals`, `GCard`, `YCard`, `RCard`) VALUES ("' . ucwords($data['B'] . ' ' . $data['A']). '","' . $data['D'] . '","' . $data['C'] . '","' . $data['E'] . '","' . $data['H'] . '","' . $data['G'] . '","' . $data['F'] . '");'  );
 		}
 	}	
 }
@@ -140,11 +140,13 @@ function GetCompetition ($compID, $compName) {
 }
 
 function ExecuteSQL ($querystring) {
+	include("config.php");
+// 	print "$querystring\r\n";
 	$db = mysqli_connect($sqlserver,$sqlusername,$sqlpassword,$sqldatabse);
 	if(!$result = $db->query($querystring)){
 		die('There was an error running the query [' . $db->error . ']');
 	} else {
-		if (strpos($querystring,"elect") or  strpos($querystring,"all")) {
+		if (startsWith(strtolower($querystring),"select") or  startsWith(strtolower($querystring),"call")) {
 			while($row = $result->fetch_array())
 			{
 				$return[] = $row;
@@ -180,7 +182,7 @@ function GenerateClubResultsXLS ($json) {
 	error_reporting(E_ALL);
 	ini_set('display_errors', TRUE);
 	ini_set('display_startup_errors', TRUE);
-	require_once dirname(__FILE__) . '/../../Classes/PHPExcel.php';
+	require_once '/var/www/Classes/PHPExcel.php';
 	// Create new PHPExcel object
 	$objPHPExcel = new PHPExcel();
 	// Set document properties
@@ -252,6 +254,11 @@ function GenerateClubResultsXLS ($json) {
 	
 	
 	
+}
+
+function startsWith($haystack, $needle) {
+	// search backwards starting from haystack length characters from the end
+	return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
 }
 
 ?>

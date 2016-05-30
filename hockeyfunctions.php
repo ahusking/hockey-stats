@@ -2,6 +2,7 @@
 require_once '../../Classes/PHPExcel/IOFactory.php';
 require_once '../../Classes/PHPExcel.php';
 include("simple_html_dom.php");
+include("config.php");
 $compJSON = "";
 
 function DownloadCompetitionStats($json) {
@@ -139,7 +140,7 @@ function GetCompetition ($compID, $compName) {
 }
 
 function ExecuteSQL ($querystring) {
-	$db = mysqli_connect("localhost","hockeydb",'$7a7$DB',"Hockey" . date("Y"));
+	$db = mysqli_connect($sqlserver,$sqlusername,$sqlpassword,$sqldatabse);
 	if(!$result = $db->query($querystring)){
 		die('There was an error running the query [' . $db->error . ']');
 	} else {

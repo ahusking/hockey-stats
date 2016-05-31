@@ -80,23 +80,31 @@ $(document).ready(function() {
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Score Stats <span class="sr-only">(current)</span></a></li>
-            <li><a href="?page=topscorers">Highest Overall Scorers </a></li>
-            <li><a href="?page=seniorscorers">Highest Senior Scorers </a></li>
-            <li><a href="?page=juniorscorers">Highest Junior Scorers</a></li>
+            <?php 
+            if ($clubname == 'United Hockey Club') {
+	            print '<li><a href="?page=topscorers">Highest Overall Scorers </a></li>
+	            <li><a href="?page=seniorscorers">Highest Senior Scorers </a></li>
+	            <li><a href="?page=juniorscorers">Highest Junior Scorers</a></li>';
+            } else {
+            	print '<li class="disabled" title="Not currently available"><a href="?page=topscorers">Highest Overall Scorers </a></li>
+	            <li class="disabled" title="Not currently available"><a href="?page=seniorscorers">Highest Senior Scorers </a></li>
+	            <li class="disabled" title="Not currently available"><a href="?page=juniorscorers">Highest Junior Scorers</a></li>';
+            }
+            ?>
             
           </ul>
           <ul class="nav nav-sidebar">
           	<li class="active"><a href="#">Grade Stats<span class="sr-only">(current)</span></a></li>
           	
-            <li ><a href="?page=getclgames">CL Games Played</a></li>
-            <li ><a href="?page=getslgames">SL Games Played</a></li>
-            <li ><a href="?page=getjuniorgames">Junior Games Played</a></li>
+            <li ><a href="?page=getclgames&clubname=<?php print $clubname; ?>">CL Games Played</a></li>
+            <li ><a href="?page=getslgames&clubname=<?php print $clubname; ?>">SL Games Played</a></li>
+            <li ><a href="?page=getjuniorgames&clubname=<?php print $clubname; ?>">Junior Games Played</a></li>
           </ul>
           <ul class="nav nav-sidebar">
           	<li class="active"><a href="#">Team Stats (To be Added)<span class="sr-only">(current)</span></a></li>
-            <li class="disabled"><a href="">Random Item 1</a></li>
-            <li class="disabled"><a href="">Random Item 2</a></li>
-            <li class="disabled"><a href="">Random Item 3</a></li>
+            <li class="disabled" title="Not currently available"><a href="">Random Item 1</a></li>
+            <li class="disabled" title="Not currently available"><a href="">Random Item 2</a></li>
+            <li class="disabled" title="Not currently available"><a href="">Random Item 3</a></li>
             <li ><a href="inc/generateclubxls.php">This Weeks Results</a></li>
           </ul>
         </div>

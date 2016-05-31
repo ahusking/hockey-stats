@@ -6,12 +6,13 @@ include("config.php");
 $compJSON = "";
 
 function DownloadCompetitionStats($json) {
+	global $tmpdirectory;
 	$baseURL = "https://sportsdesq.onesporttechnology.com/15/portal/playerStatisticsXls/competitionid/";
 	foreach ($json as $id => $name) {
 		print "\tDLCompStats: Downloading Files\r\n";
 		DownloadAndWriteFile($baseURL . $name["competitionId"], $name["competitionId"] . ".xlsx");
 		print "\tDLCompStats: Converting files to SQL\r\n";
-		ConvertCompetitionXLSToSqlV2 ("tmp/" . $name["competitionId"] . ".xlsx", $name["competitionId"]);
+		ConvertCompetitionXLSToSqlV2 ($tmpdirectory . $name["competitionId"] . ".xlsx", $name["competitionId"]);
 	}
 }
 
@@ -166,8 +167,9 @@ function ExecuteSQL ($querystring) {
 	$db->close();
 }
 function DownloadAndWriteFile($url, $filename) {
+	global $tmpdirectory;
 	// file handler
-	$file = fopen("/var/www/html/hockey/tmp/$filename", 'w');
+	$file = fopen("$tmpdirectory$filename", 'w');
 	// cURL
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL,$url);

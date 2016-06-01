@@ -4,5 +4,5 @@ $sqlserver = 'localhost';
 $sqlusername = 'username';
 $sqlpassword = 'password';
 $sqldatabse = 'Hockey' . date("Y");
-
+$tmpdirectory = "/var/www/html/hockey/tmp/"
 ?>

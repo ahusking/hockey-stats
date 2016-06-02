@@ -1,23 +1,30 @@
 <?php
 //Include website downloader
-include("simple_html_dom.php");
-include("config.php");
-
-
+// include("simple_html_dom.php");
+// include("config.php");
+include("hockeyfunctions.php");
+// var_dump($argv);
 //The below function will pull the current competition list for Hockey ACT, and create databases for each competition
-CycleCompetitions(json_decode(GetCompetitionList(),1)["competitions"]);
-
-
-function GetCompetitionList (){
-	$html = file_get_html("https://sportsdesq.onesporttechnology.com/index.cfm?action=ajax.getCompetitions&orgId=15&keyword=&searchColumn=&currentpage=1&rowsperpage=100&clubId=&_=1462844773562");
-	// United Competitions
-	// $html = file_get_html("https://sportsdesq.onesporttechnology.com/index.cfm?action=ajax.getCompetitions&orgId=15&keyword=&searchColumn=&currentpage=1&rowsperpage=100&clubId=278&_=1462844773562");
-	return (str_replace(" " , "", $html));
+if ($argv["1"] == "rebuildcompdb") {
+	CycleCompetitions(json_decode(GetCompetitionList(true),1)["competitions"]);
 }
 
 
+// The below function will generate the club infomation based on the team names the in the database (clubs that change their team names will show up multiple times
+if ($argv["1"] == "generateteamdbs") {
+	CycleClubs();
+}
+
+
+// function GetCompetitionList (){
+// 	$html = file_get_html("https://sportsdesq.onesporttechnology.com/index.cfm?action=ajax.getCompetitions&orgId=15&keyword=&searchColumn=&currentpage=1&rowsperpage=100&clubId=&_=1462844773562");
+// 	// United Competitions
+// 	// $html = file_get_html("https://sportsdesq.onesporttechnology.com/index.cfm?action=ajax.getCompetitions&orgId=15&keyword=&searchColumn=&currentpage=1&rowsperpage=100&clubId=278&_=1462844773562");
+// 	return (str_replace(" " , "", $html));
+// }
+
+
 function CycleCompetitions ($json) {
-	global $db;
 	foreach ($json as $id => $name) {
 			//each $name contains competitionId and competitionName
 			print "Updating competitions table with competition:" . $name["competitionName"] . "<br>\r\n";
@@ -51,11 +58,12 @@ function GenerateSQLTableCompetition($compName) {
 	ExecuteSQL($querystring);
 }
 
-function ExecuteSQL ($querystring) {
-	include("config.php");
-	$db = mysqli_connect($sqlserver,$sqlusername,$sqlpassword,$sqldatabse);
-	if(!$result = $db->query($querystring)){
-		die('There was an error running the query [' . $db->error . ']');
+
+function CycleClubs () {
+	print "Getting Clubs\r\n";
+	$clubs = ExecuteSQL("CALL GetClubs() ");
+	foreach ($clubs as $clubname) {
+		$tablename = preg_replace('/[0-9]+/', '', str_replace(".","",str_replace("/","",str_replace("'","",str_replace(" ", "",$clubname[0])))));
 	}
 }
 

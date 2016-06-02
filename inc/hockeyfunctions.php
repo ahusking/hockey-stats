@@ -55,7 +55,7 @@ function ConvertCompetitionXLSToSqlV2 ($filename, $competitionID) {
 // 			print $compCode["CompetitionCode"] . "\r\n";
 			//print 'REPLACE INTO ' . $compArray['CompetitionName'] . ' (`PlayerName`, `GamesPlayed`, `Goals`, `GCard`, `YCard`, `RCard`) VALUES ("' . ucwords($data['B'] . ' ' . $data['A']) . '","' . $data['D'] . '","' . $data['E'] . '","' . $data['H'] . '","' . $data['G'] . '","' . $data['F'] . '");\r\n\r\n';
 			ExecuteSQL ('UPDATE PlayerStats SET ' . $compCode["CompetitionCode"] . 'Goals = "' . $data['E'] . '" Where PlayerName = "' . $data["B"] . " " . $data["A"] . '"');
-			ExecuteSQL ('REPLACE INTO ' . $compArray['CompetitionName'] . ' (`PlayerName`, `GamesPlayed`, `Team`, `Goals`, `GCard`, `YCard`, `RCard`) VALUES ("' . ucwords($data['B'] . ' ' . $data['A']). '","' . $data['D'] . '","' . $data['C'] . '","' . $data['E'] . '","' . $data['H'] . '","' . $data['G'] . '","' . $data['F'] . '");'  );
+			ExecuteSQL ('REPLACE INTO ' . $compArray['CompetitionName'] . ' (`PlayerName`, `GamesPlayed`, `Team`, `Goals`, `GCard`, `YCard`, `RCard`) VALUES ("' . ucwords($data['B'] . ' ' . $data['A']). '","' . $data['D'] . '","' . str_replace("'","",$data['C']) . '","' . $data['E'] . '","' . $data['H'] . '","' . $data['G'] . '","' . $data['F'] . '");'  );
 		}
 	}	
 }
@@ -149,6 +149,10 @@ function GetCompetition ($compID, $compName) {
 
 function ExecuteSQL ($querystring) {
 	include("config.php");
+// 	global $sqlserver;
+// 	global $sqlusername;
+// 	global $sqlpassword;
+// 	global $sqldatabase;
 // 	print "$querystring\r\n";
 	$db = mysqli_connect($sqlserver,$sqlusername,$sqlpassword,$sqldatabse);
 	if(!$result = $db->query($querystring)){

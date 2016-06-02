@@ -12,6 +12,7 @@
     <title>
 	<?php 
 	include ("inc/config.php");
+	include ("inc/hockeyfunctions.php");
 	print "$clubname\r\n";
 	?>
 	</title>
@@ -55,9 +56,9 @@ $(document).ready(function() {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="?">	<?php 
+          <a class="navbar-brand" href="?clubname=	<?php 
 // 			include ("inc/config.php");
-			print "$clubname\r\n";
+			print "$clubname\"> $clubname\r\n";
 			?>	
 		</a>
         </div>
@@ -65,7 +66,22 @@ $(document).ready(function() {
           <ul class="nav navbar-nav navbar-right">
 <!--             <li><a href="#">Dashboard</a></li> -->
 <!--             <li><a href="#">Settings</a></li> -->
-<!--             <li><a href="#">Profile</a></li> -->
+             <li><form action="index.php" method="post">
+             <select onchange="this.form.submit()" class="form-control" name="clubname" id="clubname" >
+             <?php 
+             $results = ExecuteSQL("CALL GetClubs()");
+//              var_dump($results);
+             foreach ($results as $result => $ateam) {
+             	$team = str_replace("'", "", $ateam["Team"]);
+             	if ($team == $clubname) {
+             		print '<option value="' . $team . '" selected> ' . $team . ' </option>' . "\r\n";
+             	} else {
+             		print '<option value="' . $team . '"> ' . $team . ' </option>' . "\r\n";   
+             	}
+             }
+             ?> 
+             </select></li>
+             </form>
             <li><a href="mailto://support@husking.id.au">Help</a></li>
           </ul>
 <!--           <form class="navbar-form navbar-right"> -->
@@ -105,14 +121,21 @@ $(document).ready(function() {
             <li class="disabled" title="Not currently available"><a href="">Random Item 1</a></li>
             <li class="disabled" title="Not currently available"><a href="">Random Item 2</a></li>
             <li class="disabled" title="Not currently available"><a href="">Random Item 3</a></li>
-            <li ><a href="inc/generateclubxls.php">This Weeks Results</a></li>
+            <li class="active"><a href="#">Other<span class="sr-only">(current)</span></a></li>
+            <?php 
+	            if ($clubname == 'United Hockey Club') {
+	            	print '<li ><a href="?page=lastweeksresults">Last Rounds Results</a></li>';
+	            	print '<li ><a href="inc/generateclubxls.php">Last Rounds Results (Excel)</a></li>';
+	            	
+	            }
+            ?>
+            
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header"><?php print explode(" ", $clubname)[0]?> Dashboard</h1>
+          <h1 class="page-header"><?php print $clubname; ?> Dashboard</h1>
 <?php 
-error_reporting(E_ALL);
-include("inc/hockeyfunctions.php");
+
 $page = strtolower($_REQUEST["page"]);
 // $page = "topscorers";
 
@@ -243,7 +266,43 @@ $page = strtolower($_REQUEST["page"]);
 					print "</tr>\r\n";
 				}
 				print "</tbody></table>";
-				break;	
+				break;
+			case "lastweeksresults":
+            	print '<h2> Last Weeks Results</h1><table id="example" class="table table-striped table-bordered">
+				    <col width = "130">
+				    <col width = "20">
+				    <col width = "130">
+				    <col width = "130">
+				    <thead>
+				      <tr>
+				        <th>Home</th>
+				        <th >&nbsp;</th>
+				        <th>Away</th>
+				        <th>Game Info</th>
+				      </tr>
+				    </thead>
+				    <tbody>';
+		    	$json  = json_decode(file_get_contents("data/unitedcomp.json"), 1);
+		    	foreach ($json as $CompetitionName => $GameInfo) {
+						// Fix this code for PHP
+						$CompCode = str_replace("Boys Division","Boys D",str_replace("Girls Division","Girls D",str_replace("Canberra Cup Midweek 2016","Midweek",str_replace("Outdoor2016","",$CompetitionName))));
+		     			//$CompCode = str_replace(str_replace(str_replace(str_replace(str_replace(str_replace($CompetitionName,'Women',''),'Men',''),'Outdoor2016',''),'CanberraCupMidweek2016','CBR'),'GirlsDivision','G'),'BoysDivision','B');
+		    		$keys = array_keys($GameInfo);
+		    		if ($keys[0] != "" && $keys[1] != "") {
+						print "<tr>";
+			    		print "<td> $CompCode - " . $keys[0] . "<br>" . $GameInfo[$keys[0]] . "</td>";
+			    		print '<td><img src="../inc/vs.png" width="40" height="40"></img></td>';
+			    		print "<td> $CompCode - " . $keys[1] . "<br>" . $GameInfo[$keys[1]] . "</td>";
+			    		print "<td>" . $GameInfo["Date"] . "<br>" . $GameInfo["Venue"] . "</td></tr>";
+		    		}
+		    	}
+			      // <tr>
+			      //  <td>Old Canberrans Hockey Club <br> Goals: 4</td>
+			      //  <td><img src="../inc/vs.png" width="40" height="40"></img></td>
+			      //  <td>United Hockey Club <br> Goals: 2</td>
+			      //  <td> 28 May 2016 5:00 PM <br> Powell </td>
+			      // </tr>
+			    print '</tbody></table>';
 		default:
 			
 	

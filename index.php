@@ -133,6 +133,7 @@ $(document).ready(function() {
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <?php include_once("inc/analyticstracking.php") ?>
           <h1 class="page-header"><?php print $clubname; ?> Dashboard</h1>
 <?php 
 

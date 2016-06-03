@@ -155,6 +155,7 @@ function ExecuteSQL ($querystring) {
 // 	global $sqldatabase;
 // 	print "$querystring\r\n";
 	$db = mysqli_connect($sqlserver,$sqlusername,$sqlpassword,$sqldatabse);
+	$querystring = $db->real_escape_string($querystring);
 	if(!$result = $db->query($querystring)){
 		die('There was an error running the query [' . $db->error . ']');
 	} else {

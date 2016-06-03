@@ -124,6 +124,7 @@ $(document).ready(function() {
             <li class="active"><a href="#">Other<span class="sr-only">(current)</span></a></li>
             <?php 
 	            if ($clubname == 'United Hockey Club') {
+	            	print '<li ><a href="?page=nextrounddraw">Next Round\'s Draw</a></li>';
 	            	print '<li ><a href="?page=lastweeksresults">Last Rounds Results</a></li>';
 	            	print '<li ><a href="inc/generateclubxls.php">Last Rounds Results (Excel)</a></li>';
 	            	
@@ -304,6 +305,42 @@ $page = strtolower($_REQUEST["page"]);
 			      //  <td> 28 May 2016 5:00 PM <br> Powell </td>
 			      // </tr>
 			    print '</tbody></table>';
+		    case "nextrounddraw":
+			    	print '<h2> Last Weeks Results</h1><table id="example" class="table table-striped table-bordered">
+				    <col width = "130">
+				    <col width = "20">
+				    <col width = "130">
+				    <col width = "130">
+				    <thead>
+				      <tr>
+				        <th>Home</th>
+				        <th >&nbsp;</th>
+				        <th>Away</th>
+				        <th>Game Info</th>
+				      </tr>
+				    </thead>
+				    <tbody>';
+			    	$json  = json_decode(file_get_contents("data/unitedcompnext.json"), 1);
+			    	foreach ($json as $CompetitionName => $GameInfo) {
+			    		// Fix this code for PHP
+			    		$CompCode = str_replace("Boys Division","Boys D",str_replace("Girls Division","Girls D",str_replace("Canberra Cup Midweek 2016","Midweek",str_replace("Outdoor2016","",$CompetitionName))));
+			    		//$CompCode = str_replace(str_replace(str_replace(str_replace(str_replace(str_replace($CompetitionName,'Women',''),'Men',''),'Outdoor2016',''),'CanberraCupMidweek2016','CBR'),'GirlsDivision','G'),'BoysDivision','B');
+			    		$keys = array_keys($GameInfo);
+			    		if ($keys[0] != "" && $keys[1] != "") {
+			    			print "<tr>";
+			    			print "<td> $CompCode - " . $keys[0] . "<br>" . $GameInfo[$keys[0]] . "</td>";
+			    			print '<td><img src="../inc/vs.png" width="40" height="40"></img></td>';
+			    			print "<td> $CompCode - " . $keys[1] . "<br>" . $GameInfo[$keys[1]] . "</td>";
+			    			print "<td>" . $GameInfo["Date"] . "<br>" . $GameInfo["Venue"] . "</td></tr>";
+			    		}
+			    	}
+			    	// <tr>
+			    	//  <td>Old Canberrans Hockey Club <br> Goals: 4</td>
+			    	//  <td><img src="../inc/vs.png" width="40" height="40"></img></td>
+			    	//  <td>United Hockey Club <br> Goals: 2</td>
+			    	//  <td> 28 May 2016 5:00 PM <br> Powell </td>
+			    	// </tr>
+			    	print '</tbody></table>';
 		default:
 			
 	

@@ -1,7 +1,8 @@
 <?php
-include("hockeyfunctions.php");
-$Response = EnumerateCompetitions(GetCompetitionList());
-$myfile = fopen("../data/unitedcomp.json", "w");
-
-fwrite($myfile, json_encode($compJSON));
+	include("hockeyfunctions.php");
+	$Response = EnumerateCompetitions(GetCompetitionList());
+	$filename = $argv[1];
+	print "$filename";
+	$myfile = fopen("../data/$filename.json", "w");
+	fwrite($myfile, json_encode($compJSON));
 ?>

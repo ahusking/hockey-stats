@@ -223,7 +223,7 @@ $page = strtolower($_REQUEST["page"]);
 			<th>CL Games</th>
 			</tr>
 			</thead><tbody>' . "\r\n";
-			$querystr = "call GetCLGamesPlayed('$clubname');";
+			$querystr = "call GetCLGamesPlayed('" . mysql_real_escape_string ($clubname) . "');";
 			$results = ExecuteSQL($querystr);
 			foreach ($results as $rv => $PlayerInfo) {
 				print "<tr>\r\n";
@@ -241,7 +241,7 @@ $page = strtolower($_REQUEST["page"]);
 			<th>SL Games</th>
 			</tr>
 			</thead><tbody>' . "\r\n";
-			$querystr = "call GetSLGamesPlayed('$clubname');";
+			$querystr = "call GetSLGamesPlayed('" . mysql_real_escape_string ($clubname) . "');";
 			$results = ExecuteSQL($querystr);
 			foreach ($results as $rv => $PlayerInfo) {
 				print "<tr>\r\n";
@@ -259,7 +259,7 @@ $page = strtolower($_REQUEST["page"]);
 			<th>Junior Games</th>
 			</tr>
 			</thead><tbody>' . "\r\n";
-				$querystr = "call GetJuniorGamesPlayed('$clubname');";
+				$querystr = "call GetJuniorGamesPlayed('" . mysql_real_escape_string ($clubname) . "');";
 				$results = ExecuteSQL($querystr);
 				foreach ($results as $rv => $PlayerInfo) {
 					print "<tr>\r\n";
@@ -270,7 +270,7 @@ $page = strtolower($_REQUEST["page"]);
 				print "</tbody></table>";
 				break;
 			case "lastweeksresults":
-            	print '<h2> Last Weeks Results</h1><table id="example" class="table table-striped table-bordered">
+            	print '<h2> Last Weeks Results</h1><h5>(Updates every Monday)</h5> <table id="example" class="table table-striped table-bordered">
 				    <col width = "130">
 				    <col width = "20">
 				    <col width = "130">
@@ -305,8 +305,9 @@ $page = strtolower($_REQUEST["page"]);
 			      //  <td> 28 May 2016 5:00 PM <br> Powell </td>
 			      // </tr>
 			    print '</tbody></table>';
+			    break;
 		    case "nextrounddraw":
-			    	print '<h2> Last Weeks Results</h1><table id="example" class="table table-striped table-bordered">
+			    	print '<h2> Next Round\'s draw</h1><h5>(Updates every Tuesday)</h5> <table id="example" class="table table-striped table-bordered">
 				    <col width = "130">
 				    <col width = "20">
 				    <col width = "130">
@@ -341,6 +342,27 @@ $page = strtolower($_REQUEST["page"]);
 			    	//  <td> 28 May 2016 5:00 PM <br> Powell </td>
 			    	// </tr>
 			    	print '</tbody></table>';
+			    	break;
+		    case "rawdata":
+		    	print '<table id="example" class="table table-striped table-bordered"><thead><th>Competition</th><th>Spreadsheet</th></thead><tbody>';
+		    	$comps = ExecuteSQL("Select * From Competitions");
+// 		    	var_dump($comps);
+// 		    	die();
+		    	foreach ($comps as $comp => $cdata) {
+		    		print "<tr><td>" . $cdata["CompetitionName"] . "</td><td><a href='tmp/" . $cdata["CompetitionID"] . ".xlsx" . "'>"  . $cdata["CompetitionID"] . ".xlsx</a></td></tr>\r\n";
+// 		    		print $cdata["CompetitionName"] . "--" . $cdata["CompetitionID"] . "\r\n";
+		    	}
+		    	break;
+		    case "allplayingstats":
+		    	SQLQueryToHTML("Select * From v_AllStats");
+	    	case "mensplayingstats":
+	    		SQLQueryToHTML("Select * From v_SeniorMenStats");
+    		case "womensplayingstats":
+    			SQLQueryToHTML("Select * From v_SeniorWomenStats");
+    		case "boysplayingstats":
+    			SQLQueryToHTML("Select * From v_JuniorBoyStats");    			
+    		case "girlsplayingstats":
+    			SQLQueryToHTML("Select * From v_JuniorGirlStats");
 		default:
 			
 	

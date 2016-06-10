@@ -13,6 +13,7 @@
 	<?php 
 	include ("inc/config.php");
 	include ("inc/hockeyfunctions.php");
+	include ("inc/sql.php");
 	print "$clubname\r\n";
 	?>
 	</title>
@@ -50,19 +51,15 @@ $(document).ready(function() {
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="?clubname=	<?php 
-// 			include ("inc/config.php");
-			print "$clubname\"> $clubname\r\n";
-			?>	
-		</a>
+          <a class="navbar-brand" href="?">Test</a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
+        <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
 <!--             <li><a href="#">Dashboard</a></li> -->
 <!--             <li><a href="#">Settings</a></li> -->
@@ -121,6 +118,17 @@ $(document).ready(function() {
             <li class="disabled" title="Not currently available"><a href="">Random Item 1</a></li>
             <li class="disabled" title="Not currently available"><a href="">Random Item 2</a></li>
             <li class="disabled" title="Not currently available"><a href="">Random Item 3</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+          	<li class="active"><a href="#">Competition Stats<span class="sr-only">(current)</span></a></li>
+            <li title="All Competition Stats"><a href="?page=allplayingstats&clubname=<?php print $clubname; ?>">All Competition Stats</a></li>
+            <li title="Senior Mens Stats"><a href="?page=mensplayingstats&clubname=<?php print $clubname; ?>">Senior Mens Stats</a></li>
+            <li title="Senior Womens Stats"><a href="?page=womensplayingstats&clubname=<?php print $clubname; ?>">Senior Womens Stats</a></li>
+            <li title="Junior Boys Stats"><a href="?page=boysplayingstats&clubname=<?php print $clubname; ?>">Junior Boys Stats</a></li>
+            <li title="Junior Girls Stats"><a href="?page=girlsplayingstats&clubname=<?php print $clubname; ?>">Junior Girls Stats</a></li>
+            
+          </ul>
+            <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Other<span class="sr-only">(current)</span></a></li>
             <?php 
 	            if ($clubname == 'United Hockey Club') {
@@ -354,15 +362,31 @@ $page = strtolower($_REQUEST["page"]);
 		    	}
 		    	break;
 		    case "allplayingstats":
-		    	SQLQueryToHTML("Select * From v_AllStats");
+		    	print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryclubstats" . '">Download Stats (Excel)</a><br>';
+	    		SQLQueryToHTML($sqlqueryclubstats);
+		    	break;
 	    	case "mensplayingstats":
-	    		SQLQueryToHTML("Select * From v_SeniorMenStats");
+	    		print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryseniormenstats" . '">Download Stats (Excel)</a><br>';
+	    		SQLQueryToHTML($sqlqueryseniormenstats);
+	    		break;
     		case "womensplayingstats":
-    			SQLQueryToHTML("Select * From v_SeniorWomenStats");
+    			print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryseniorwomenstats" . '">Download Stats (Excel)</a><br>';
+    			SQLQueryToHTML($sqlqueryseniorwomenstats);
+    			break;
     		case "boysplayingstats":
-    			SQLQueryToHTML("Select * From v_JuniorBoyStats");    			
+    			print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryjuniorboystats" . '">Download Stats (Excel)</a><br>';
+    			SQLQueryToHTML($sqlqueryjuniorboystats);
+    			break;
     		case "girlsplayingstats":
-    			SQLQueryToHTML("Select * From v_JuniorGirlStats");
+    			print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryjuniorgirlstats" . '">Download Stats (Excel)</a><br>';
+    			SQLQueryToHTML($sqlqueryjuniorgirlstats);
+    			break;
+    		case "seniorplayingstats":
+				print "This query has been removed.";
+    			break;
+    		case "generatestatsxls":
+    			GenerateClubStatsXLS($sqlqueryjuniorgirlstats);
+    			break;
 		default:
 			
 	

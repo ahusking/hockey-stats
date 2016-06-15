@@ -57,7 +57,7 @@ $(document).ready(function() {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="?">Test</a>
+          <a class="navbar-brand" href="?clubname=<?php print $clubname; ?>"><?php print $clubname; ?></a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -67,7 +67,6 @@ $(document).ready(function() {
              <select onchange="this.form.submit()" class="form-control" name="clubname" id="clubname" >
              <?php 
              $results = ExecuteSQL("CALL GetClubs()");
-//              var_dump($results);
              foreach ($results as $result => $ateam) {
              	$team = str_replace("'", "", $ateam["Team"]);
              	if ($team == $clubname) {
@@ -84,9 +83,6 @@ $(document).ready(function() {
 <!--           <form class="navbar-form navbar-right"> -->
 <!--             <input type="text" class="form-control" placeholder="Search..."> -->
 <!--           </form> -->
-        </div>
-      </div>
-    </nav>
 
     <div class="container-fluid">
       <div class="row">
@@ -141,6 +137,10 @@ $(document).ready(function() {
             
           </ul>
         </div>
+      	</div>
+    	</nav>
+        </div>
+
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <?php include_once("inc/analyticstracking.php") ?>
           <h1 class="page-header"><?php print $clubname; ?> Dashboard</h1>
@@ -362,23 +362,23 @@ $page = strtolower($_REQUEST["page"]);
 		    	}
 		    	break;
 		    case "allplayingstats":
-		    	print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryclubstats" . '">Download Stats (Excel)</a><br>';
+		    	print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryclubstats" . '&clubname=' . $clubname . '">Download Stats (Excel)</a><br>';
 	    		SQLQueryToHTML($sqlqueryclubstats);
 		    	break;
 	    	case "mensplayingstats":
-	    		print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryseniormenstats" . '">Download Stats (Excel)</a><br>';
+	    		print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryseniormenstats" . '&clubname=' . $clubname . '">Download Stats (Excel)</a><br>';
 	    		SQLQueryToHTML($sqlqueryseniormenstats);
 	    		break;
     		case "womensplayingstats":
-    			print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryseniorwomenstats" . '">Download Stats (Excel)</a><br>';
+    			print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryseniorwomenstats" . '&clubname=' . $clubname . '">Download Stats (Excel)</a><br>';
     			SQLQueryToHTML($sqlqueryseniorwomenstats);
     			break;
     		case "boysplayingstats":
-    			print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryjuniorboystats" . '">Download Stats (Excel)</a><br>';
+    			print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryjuniorboystats" . '&clubname=' . $clubname . '">Download Stats (Excel)</a><br>';
     			SQLQueryToHTML($sqlqueryjuniorboystats);
     			break;
     		case "girlsplayingstats":
-    			print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryjuniorgirlstats" . '">Download Stats (Excel)</a><br>';
+    			print '<a href="inc/generatestatsxls.php?query=' . "sqlqueryjuniorgirlstats" . '&clubname=' . $clubname . '">Download Stats (Excel)</a><br>';
     			SQLQueryToHTML($sqlqueryjuniorgirlstats);
     			break;
     		case "seniorplayingstats":
